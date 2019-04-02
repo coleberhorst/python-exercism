@@ -1,52 +1,51 @@
 class Node(object):
-    def __init__(self, value, succeeding=None, previous=None):
-        self.value, self.succeeding, self.previous = value, succeeding, previous
+    def __init__(self, value, next=None):
+        self.__value, self.__next = value, next
 
     def next(self):
-        return self.succeeding
+        return self.__next
+
+    def value(self):
+        return self.__value
 
 
 class LinkedList(object):
     def __init__(self, values=[]):
-        self.root, self.length = Node(None), 0
-        self.root.previous = self.root.succeeding = self.root
+        self.__head, self.__length = None, 0
         for item in values:
             self.push(item)
 
     def __len__(self):
-        return self.length
+        return self.__length
 
     def __iter__(self):
-        node = self.root.succeeding
-        while node.value:
-            node = node.succeeding
-            yield node.previous.value
+        node = self.__head
+        while node:
+            yield node.value()
+            node = node.next()
 
     def reversed(self):
-        return self.__iter__()
-
-    def _link(self, value, previous):
-        node = Node(value, previous.succeeding, previous)
-        node.previous.succeeding = node
-        node.succeeding.previous = node
-
-    def _unlink(self, node):
-        node.previous.succeeding = node.succeeding
-        node.succeeding.previous = node.previous
-        return node.value
+        return LinkedList(list(self))
 
     def head(self):
-        return self.root
+        if not self.__head:
+            raise EmptyListException("Empty")
+        return self.__head
 
     def push(self, value):
-        self._link(value, self.root.previous)
-        self.length += 1
+        if not self.__head:
+            self.__head = Node(value)
+        else:
+            self.__head = Node(value, self.__head)
+        self.__length += 1
 
     def pop(self):
-        self.length -= 1
-        if not self.length:
-            raise EmptyListException("List is empty.")
-        return self._unlink(self.root.previous)
+        if not self.__head:
+            raise EmptyListException("Empty")
+        node = self.__head
+        self.__head = node.next()
+        self.__length -= 1
+        return node.value()
 
 
 class EmptyListException(Exception):
