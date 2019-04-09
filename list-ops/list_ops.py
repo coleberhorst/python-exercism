@@ -1,30 +1,39 @@
 def append(xs, ys):
-    pass
+    return xs + ys
 
 
 def concat(lists):
-    pass
+    return list([item for group in lists for item in group])
 
 
 def filter_clone(function, xs):
-    pass
+    return [i for i in xs if function(i)]
 
 
 def length(xs):
-    pass
+    l = 0
+    for i in xs:
+        l += 1
+    return l
 
 
 def map_clone(function, xs):
-    pass
+    return [function(i) for i in xs]
 
 
 def foldl(function, xs, acc):
-    pass
+    total = acc
+    for i in xs:
+        total = function(i, total) if total != 0 else total
+    return total
 
 
 def foldr(function, xs, acc):
-    pass
+    total = acc
+    for i in reverse(xs):
+        total = function(i, total) if total != 0 else total
+    return total
 
 
 def reverse(xs):
-    pass
+    return xs[::-1]
