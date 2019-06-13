@@ -8,31 +8,22 @@ class Hangman(object):
         self.remaining_guesses = 9
         self.status = STATUS_ONGOING
         self.WORD = word
-        self.guess_list = []
-        self.mask = "*" * len(word)
+        self.guesses = set()
 
     def guess(self, char):
-        self.remaining_guesses -= 1
-        try:
-            if char in self.guess_list:
-                raise ValueError("{} already guessed for {}".format(char, self.mask))
-            elif char in self.WORD:
-                self.mask[self.WORD.index(char)] # TODO handle multiple duplicate characters
-                print("{} is in {}!".format(char, self.mask))
-                self.guess_list.append(char)
-            else:
-                print("{} is not in {}.".format(char, self.mask))
-                self.guess_list.append(char)
-        except:
-            pass
-        print("guessed: {}".format(self.guess_list))
+        if self.status != STATUS_ONGOING:
+            raise ValueError("The game is over.")
+        if char not in self.guesses and char in self.WORD:
+            self.guesses.add(char)
+            if all(c in self.guesses for c in self.WORD):
+                self.status = STATUS_WIN
+        else:
+            self.remaining_guesses -= 1
+            if self.remaining_guesses < 0:
+                self.status = STATUS_LOSE
 
     def get_masked_word(self):
-        print(self.mask)
+        return ''.join(c if c in self.guesses else '_' for c in self.WORD)
 
     def get_status(self):
-        if self.remaining_guesses < 0 and "*" in self.mask:
-            self.status = STATUS_LOSE
-        elif "*" not in self.mask:
-            self.status = STATUS_WIN
         return self.status
