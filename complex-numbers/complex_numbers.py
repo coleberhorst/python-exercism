@@ -1,4 +1,4 @@
-from math import sqrt
+from math import sqrt, cos, sin, exp
 
 
 class ComplexNumber(object):
@@ -6,23 +6,28 @@ class ComplexNumber(object):
         self.real = real
         self.imaginary = imaginary
 
+    def __eq__(self, other):
+        return self.real == other.real and self.imaginary == other.imaginary
+
     def __add__(self, other):
-        pass
+        return ComplexNumber(self.real + other.real, self.imaginary + other.imaginary)
 
     def __mul__(self, other):
-        pass
+        return ComplexNumber(self.real * other.real - self.imaginary * other.imaginary,
+                            self.imaginary * other.real + self.real * other.imaginary)
 
     def __sub__(self, other):
-        pass
+        return ComplexNumber(self.real - other.real, self.imaginary - other.imaginary)
 
     def __truediv__(self, other):
-        pass
+        return ComplexNumber((self.real * other.real + self.imaginary * other.imaginary) / (other.real ** 2 + other.imaginary ** 2),
+                            (self.imaginary * other.real - self.real * other.imaginary) / (other.real ** 2 + other.imaginary ** 2))
 
     def __abs__(self):
         return sqrt(self.real**2 + self.imaginary**2)
 
     def conjugate(self):
-        pass
+        return ComplexNumber(self.real, -self.imaginary)
 
     def exp(self):
-        pass
+        return ComplexNumber(exp(self.real) * cos(self.imaginary), sin(self.imaginary))
