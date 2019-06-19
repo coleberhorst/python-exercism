@@ -1,14 +1,21 @@
-discounts = {1:1, 2:.95, 3:.9, 4:.8, 5:.75}
+from collections import defaultdict
+
+BOOK_PRICES = [0, 800, 1520, 2160, 2560, 3000]
 
 
 def calculate_total(books):
-    # take a list of books 1-5, might be duplicates
-    # split into discount groups, minimizing the number of alone books 4, 4 is better than 3,5
-    book_sets = [[]]*10
-    print(book_sets)
+    count = defaultdict(int)
     for b in books:
-        i = 0
-        while i != 10 and b in book_sets[i] :
-            i += 1
-        book_sets[i].append(b)
-    print(book_sets)
+        count[b] += 1
+    largest_set, price = len(set(books)), 0
+
+    while sum(count.values()):
+        subtract_counter = largest_set
+        print(largest_set, subtract_counter, count)
+        for b in count:
+            if count[b] > 0 and subtract_counter > 0:
+                subtract_counter -= 1
+                count[b] -= 1
+        price += BOOK_PRICES[largest_set - subtract_counter]
+        print(largest_set, subtract_counter, count, price)
+    return price
